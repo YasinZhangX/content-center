@@ -4,6 +4,8 @@ import com.yasin.contentcenter.dao.content.ShareMapper;
 import com.yasin.contentcenter.domain.entity.content.Share;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.ServiceInstance;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -17,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TestController {
     private final ShareMapper shareMapper;
+    private final DiscoveryClient discoveryClient;
 
     @GetMapping("test")
     public List<Share> testInsert() {
@@ -30,5 +33,14 @@ public class TestController {
         shareMapper.insertSelective(share);
 
         return shareMapper.selectAll();
+    }
+
+    /**
+     * 测试服务发现
+     * @return 返回用户中心所有实例
+     */
+    @GetMapping("testDiscovery")
+    public List<ServiceInstance> getInstances() {
+        return discoveryClient.getInstances("user-center");
     }
 }

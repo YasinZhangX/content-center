@@ -8,3 +8,13 @@ spring:
       username: root
       password: 123456
       driver-class-name: com.mysql.cj.jdbc.Driver
+
+  cloud:
+    nacos:
+      discovery:
+        # 指定 nacos server 地址
+        server-add: localhost:8848
+
+  application:
+    # 服务名称
+    name: content-center
