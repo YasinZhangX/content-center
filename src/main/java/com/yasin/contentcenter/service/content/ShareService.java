@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 
 /**
  * @author Yasin Zhang
@@ -25,7 +27,6 @@ public class ShareService {
 
     private final ShareMapper shareMapper;
     private final RestTemplate restTemplate;
-    private final DiscoveryClient discoveryClient;
 
     /**
      * 获取分享详情
@@ -37,14 +38,7 @@ public class ShareService {
         // 发布人ID
         Integer userId = share.getUserId();
 
-        List<ServiceInstance> instances = discoveryClient.getInstances("user-center");
-        String url = instances.stream()
-                        // 数据变换
-                        .map(instance -> instance.getUri().toString() + "/users/{id}")
-                        .findFirst()
-                        .orElseThrow(() -> new IllegalArgumentException("无用户中心实例"));
-        log.info("当前请求地址：{}", url);
-        UserDTO userDTO = restTemplate.getForObject(url, UserDTO.class, userId);
+        UserDTO userDTO = restTemplate.getForObject("http://user-center/users/{userId}", UserDTO.class, userId);
 
         // 消息装配
         ShareDTO shareDTO = new ShareDTO();
