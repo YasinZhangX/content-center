@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8090
 
 spring:
   datasource:
@@ -13,13 +13,25 @@ spring:
     nacos:
       discovery:
         # 指定 nacos server 地址
-        server-add: localhost:8848
+        server-addr: localhost:8848
+        namespace: 505aff4e-958c-4cc8-a6b0-7660b774a121
+        cluster-name: Chengdu
+        metadata:
+          instanceType: content-center
+          version: v1
+          target-version: v1
 
   application:
     # 服务名称
     name: content-center
 
 # 通过配置文件配置Ribbon
-user-center:
-  ribbon:
-    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+#user-center:
+#  ribbon:
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.RandomRule
+
+# ribbon 饥饿加载
+ribbon:
+  eager-load:
+    enabled: true
+    clients: user-center
